@@ -1,0 +1,58 @@
+                <label style="color: #b3aaff;">Course Title:</label>
+                <select name="course_title" id="course_title" class="form-control" style="background: transparent; color: #b3aaff;" required onchange="fetchCourseDetails()">
+                    {% for course in courses %}
+                        <option value="{{ course }}">{{ course }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    <script>
+        // Call fetchCourseDetails when the page loads to populate initial values
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCourseDetails();
+        });
+
+        function fetchCourseDetails() {
+            let courseTitle = document.querySelector('select[name="course_title"]').value;
+            console.log('Selected course:', courseTitle);
+            
+            if (courseTitle) {
+                console.log('Sending request for course details...');
+                const formData = new FormData();
+                formData.append('course_title', courseTitle);
+                
+                fetch('/get_course_details', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received data:', data);
+                    if (data && data.total_hours !== undefined && data.hours_per_week !== undefined) {
+                        document.getElementById("total_hours").value = data.total_hours;
+                        document.getElementById("hours_per_week").value = data.hours_per_week;
+                        console.log('Updated form fields with values:', data.total_hours, data.hours_per_week);
+                    } else if (data.error) {
+                        console.error('Error from server:', data.error);
+                        document.getElementById("total_hours").value = '';
+                        document.getElementById("hours_per_week").value = '';
+                    } else {
+                        console.log('No data received, clearing fields');
+                        document.getElementById("total_hours").value = '';
+                        document.getElementById("hours_per_week").value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching course details:', error);
+                    document.getElementById("total_hours").value = '';
+                    document.getElementById("hours_per_week").value = '';
+                });
+            } else {
+                console.log('No course selected');
+                document.getElementById("total_hours").value = '';
+                document.getElementById("hours_per_week").value = '';
+            }
+        }
+    </script> 

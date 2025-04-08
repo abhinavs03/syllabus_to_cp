@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter</title>
+    <link rel="stylesheet" href="gridgallery.css">
+    <link rel="stylesheet" href="basic.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* General styles */
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+body {
+    font-family: "Poppins", sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #13072e;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 50px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.navbar{
+    backdrop-filter: blur(20px);
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Flexbox and Grid examples */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+main h1{
+    font-size: 80px;
+    font-weight: 700;
+}
+
+section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.container {
+            margin-top: 50px;
+            max-width: 800px;
+            background: #3f2182;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .add-btn {
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+            background: #6c63ff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .remove-btn {
+            cursor: pointer;
+            font-size: 18px;
+            color: red;
+            margin-left: 10px;
+        }
+
+/* Pseudo-classes */
+
+article:nth-child(even) {
+    background-color: #e0e0e0;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    header {
+        padding: 5px;
+    }
+    section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    main {
+        flex-direction: column;
+    }
+}
+
+/* Hover text over images */
+.image-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-container .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.image-container:hover .overlay {
+    opacity: 1;
+}
+
+.overlay-text {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ver {
+    grid-row: span 2;
+}
+
+.hor {
+    grid-column: span 2;
+}
+
+footer {
+    /*background-color: #333;*/
+    margin-top: 10px;
+    background-image: linear-gradient(135deg, #13072e, #3f2182);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+.syllabus-converter {
+    background-image: linear-gradient(135deg, #13072e, #3f2182);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.syllabus-converter .form-control {
+    background: #b3aaff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.syllabus-converter .form-control:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.8);
+}
+
+.syllabus-converter .btn {
+    background: #13072e;
+    border: none;
+    color: #b3aaff;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.syllabus-converter .btn:hover {
+    background: linear-gradient(135deg, #3f2182, #6c63ff);
+    color: #13072e;
+}
+
+.form-control-file{
+    background: linear-gradient(135deg, #b3aaff, #6c63ff);
+    border-radius: 2px;
+
+}
+
+.content .btnLogin-popup {
+            width: 120px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid #fff;
+            outline: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 30px;
+            margin-top: 0px;
+            transition: .4s;
+        }
+
+        .content .btnLogin-popup:hover {
+            background: #fff;
+            color: #162938;
+        }
+
+        .jumbotron {
+            background: transparent;
+            animation: slideUp 1.5s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+            <a class="navbar-brand" href="#" style="color: #b3aaff;font-weight: 800;font-size: 24px;">Planify</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home" style="color: #b3aaff;">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/convert" style="color: #b3aaff;">Convert<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add_course" style="color: #b3aaff;">Add Course</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/course_plans" style="color: #b3aaff;">My Course Plans</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #b3aaff;">
+                            About us
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background: #b3aaff;backdrop-filter: blur(20px);">
+                            <a class="dropdown-item" href="desc.html" style="font-weight: 700;color:#13072e;">Description</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="serv.html" style="font-weight: 700;color:#13072e;">Services</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout" style="color: #b3aaff;">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 150px;">
+        <h2 class="text-center" style="font-weight: 700; color: #b3aaff;">Enter Course Details</h2>
+        <form action="/extract" method="POST">
+            <div class="form-group">
+                <label style="color: #b3aaff;">Course Title:</label>
+                <select name="course_title" id="course_title" class="form-control" style="background: transparent; color: #b3aaff;" required onchange="fetchCourseDetails()">
+                    {% for course in courses %}
+                        <option value="{{ course }}">{{ course }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label style="color: #b3aaff;">Start Date:</label>
+                <input type="date" name="start_date" class="form-control" style="background: transparent; color: #b3aaff;" required>
+            </div>
+            <div class="form-group">
+                <label style="color: #b3aaff;">End Date:</label>
+                <input type="date" name="end_date" class="form-control" style="background: transparent; color: #b3aaff;" required>
+            </div>
+            
+            <h3 class="text-center" style="color: #b3aaff;">Unit Details</h3>
+            <div id="unit-container"></div>
+            <button type="button" class="add-btn" onclick="addUnit()">+ Add Unit</button>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        
+        function addUnit() {
+            let container = document.getElementById("unit-container");
+            let unitCount = container.getElementsByClassName("unit-group").length + 1;
+    
+            let newUnit = document.createElement("div");
+            newUnit.classList.add("unit-group");
+            newUnit.innerHTML = `
+                <h5 style="color: #b3aaff;">Unit ${unitCount}</h5>
+                <div class="form-group">
+                    <label style="color: #b3aaff;">Unit Title:</label>
+                    <input type="text" name="unit_name[]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label style="color: #b3aaff;">Unit Subtopics:</label>
+                    <textarea name="unit_subtopics[]" class="form-control" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="color: #b3aaff;">Unit Hours:</label>
+                    <input type="text" name="unit_hours[]" class="form-control" required>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeUnit(this)">✖</button>
+            `;
+            container.appendChild(newUnit);
+        }
+    
+        function removeUnit(button) {
+            let container = document.getElementById("unit-container");
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+    </script>
+    
+    
+    
+
+    <footer style="margin-top: 40px;">
+        <p>&copy; 2024 Planify</p>
+    </footer>
+
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #13072e;">
+                    <h5 class="modal-title" id="detailsModalLabel" style="color: #b3aaff; font-weight: 800;">Course Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #b3aaff;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-image: linear-gradient(135deg, #13072e, #3f2182);">
+                    <form id="courseDetailsForm">
+                        <div class="form-group">
+                            <label for="courseDuration" style="color: #b3aaff;">Duration of Course (weeks):</label>
+                            <input type="number" id="courseDuration" class="form-control" placeholder="Enter duration in weeks" style="background: #b3aaff;border-radius: 20px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="totalHours" style="color: #b3aaff;">Total Hours:</label>
+                            <input type="number" id="totalHours" class="form-control" placeholder="Enter total hours" style="background: #b3aaff;border-radius: 20px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="hoursPerWeek" style="color: #b3aaff;">Hours per Week:</label>
+                            <input type="number" id="hoursPerWeek" class="form-control" placeholder="Enter hours per week" style="background: #b3aaff;border-radius: 20px;">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="background: #13072e;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background: #880808; color: white;">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="convertDetails()" style="background: #b3aaff; color: #13072e; font-weight: 800;">Convert</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function openModal() {
+            const syllabusText = document.getElementById('syllabusText').value.trim();
+            const syllabusFile = document.getElementById('syllabusFile').files.length > 0;
+
+            if (syllabusText || syllabusFile) {
+                $('#detailsModal').modal('show');
+            } else {
+                alert("Please enter syllabus text or upload a file before proceeding.");
+            }
+        }
+
+        function convertDetails() {
+            const duration = document.getElementById('courseDuration').value;
+            const totalHours = document.getElementById('totalHours').value;
+            const hoursPerWeek = document.getElementById('hoursPerWeek').value;
+
+            // Add your conversion logic here
+            alert(`Course Details:\nDuration: ${duration} weeks\nTotal Hours: ${totalHours}\nHours per Week: ${hoursPerWeek}`);
+
+            // Close the modal
+            $('#detailsModal').modal('hide');
+        }
+    </script>
+</body>
+</html>

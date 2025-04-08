@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course Plan</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+        body {
+            font-family: "Poppins", sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #13072e;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 10px rgba(0,0,0,.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .container {
+            margin-top: 100px;
+            color: #b3aaff;
+        }
+
+        .form-control {
+            background: transparent;
+            color: #b3aaff;
+            border: 1px solid rgba(179, 170, 255, 0.3);
+        }
+
+        .form-control:focus {
+            background: transparent;
+            color: #b3aaff;
+            border-color: #b3aaff;
+            box-shadow: 0 0 0 0.2rem rgba(179, 170, 255, 0.25);
+        }
+
+        .btn-primary {
+            background: #b3aaff;
+            border: none;
+            color: #13072e;
+        }
+
+        .btn-primary:hover {
+            background: #9d94ff;
+            color: #13072e;
+        }
+
+        .unit-group {
+            border: 1px solid rgba(179, 170, 255, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .remove-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        .add-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+            <a class="navbar-brand" href="#" style="color: #b3aaff; font-weight: 800; font-size: 24px;">Planify</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home" style="color: #b3aaff;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/convert" style="color: #b3aaff;">Convert</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add_course" style="color: #b3aaff;">Add Course</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/course_plans" style="color: #b3aaff;">My Course Plans</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2 class="text-center mb-4">Edit Course Plan</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form action="/update_plan/{{ plan.cp_id }}" method="POST">
+            <div class="form-group">
+                <label>Course Title:</label>
+                <input type="text" name="course_title" class="form-control" value="{{ plan.course_title }}" required>
+            </div>
+            <div class="form-group">
+                <label>Start Date:</label>
+                <input type="date" name="start_date" class="form-control" value="{{ plan.start_date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            <div class="form-group">
+                <label>End Date:</label>
+                <input type="date" name="end_date" class="form-control" value="{{ plan.end_date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            
+            <h3 class="text-center mt-4">Unit Details</h3>
+            <div id="unit-container">
+                {% if plan.units %}
+                    {% for unit in plan.units %}
+                    <div class="unit-group">
+                        <h5>Unit {{ loop.index }}</h5>
+                        <div class="form-group">
+                            <label>Unit Title:</label>
+                            <input type="text" name="unit_name[]" class="form-control" value="{{ unit.title }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Subtopics:</label>
+                            <textarea name="unit_subtopics[]" class="form-control" rows="2" required>{{ unit.subtopics }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Hours:</label>
+                            <input type="number" name="unit_hours[]" class="form-control" value="{{ unit.hours }}" required>
+                        </div>
+                        <button type="button" class="remove-btn" onclick="removeUnit(this)">✖</button>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="unit-group">
+                        <h5>Unit 1</h5>
+                        <div class="form-group">
+                            <label>Unit Title:</label>
+                            <input type="text" name="unit_name[]" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Subtopics:</label>
+                            <textarea name="unit_subtopics[]" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Hours:</label>
+                            <input type="number" name="unit_hours[]" class="form-control" required>
+                        </div>
+                        <button type="button" class="remove-btn" onclick="removeUnit(this)">✖</button>
+                    </div>
+                {% endif %}
+            </div>
+            <button type="button" class="add-btn" onclick="addUnit()">+ Add Unit</button>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Save Changes</button>
+        </form>
+    </div>
+
+    <footer style="margin-top: 40px; text-align: center; color: #b3aaff;">
+        <p>&copy; 2024 Planify</p>
+    </footer>
+
+    <script>
+        function addUnit() {
+            let container = document.getElementById("unit-container");
+            let unitCount = container.getElementsByClassName("unit-group").length + 1;
+    
+            let newUnit = document.createElement("div");
+            newUnit.classList.add("unit-group");
+            newUnit.innerHTML = `
+                <h5>Unit ${unitCount}</h5>
+                <div class="form-group">
+                    <label>Unit Title:</label>
+                    <input type="text" name="unit_name[]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Unit Subtopics:</label>
+                    <textarea name="unit_subtopics[]" class="form-control" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Unit Hours:</label>
+                    <input type="number" name="unit_hours[]" class="form-control" required>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeUnit(this)">✖</button>
+            `;
+            container.appendChild(newUnit);
+        }
+    
+        function removeUnit(button) {
+            let container = document.getElementById("unit-container");
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html> 

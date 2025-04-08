@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Syllabus to Course Plan Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+        body{
+            font-family: 'Poppins', sans-serif;
+            background: #E6E6FA;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #13072e 0%, #3f2182 100%);
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255,255,255,.1);
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .stat-card {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 position-fixed sidebar">
+                <div class="p-3">
+                    <h4>Admin Panel</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_home') }}">
+                            <i class="bi bi-house"></i> Admin Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users" data-bs-toggle="tab">
+                            <i class="bi bi-people"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#course-plans" data-bs-toggle="tab">
+                            <i class="bi bi-journal-text"></i> Course Plans
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#settings" data-bs-toggle="tab">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link text-danger" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-auto main-content">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <h2 class="mb-4">Dashboard</h2>
+                        <div class="row">
+                            <div class="col-md-3 mb-4">
+                                <div class="card stat-card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Users</h5>
+                                        <h2 class="card-text">{{ total_users }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card stat-card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Course Plans</h5>
+                                        <h2 class="card-text">{{ total_plans }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card stat-card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Active Users</h5>
+                                        <h2 class="card-text">{{ active_users }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card stat-card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Today's Conversions</h5>
+                                        <h2 class="card-text">{{ today_conversions }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Tab -->
+                    <div class="tab-pane fade" id="users">
+                        <h2 class="mb-4">User Management</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Login Type</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.UserID }}</td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm" 
+                                                   id="user-first-name-{{ user.UserID }}" 
+                                                   value="{{ user.first_name }}" placeholder="First Name">
+                                            <input type="text" class="form-control form-control-sm mt-1" 
+                                                   id="user-last-name-{{ user.UserID }}" 
+                                                   value="{{ user.last_name }}" placeholder="Last Name">
+                                        </td>
+                                        <td>
+                                            <input type="email" class="form-control form-control-sm" 
+                                                   id="user-email-{{ user.UserID }}" 
+                                                   value="{{ user.email }}">
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" 
+                                                    id="user-login-type-{{ user.UserID }}">
+                                                <option value="Customer" {% if user.Login_type == 'Customer' %}selected{% endif %}>Customer</option>
+                                                <option value="Staff" {% if user.Login_type == 'Staff' %}selected{% endif %}>Staff</option>
+                                                <option value="Admin" {% if user.Login_type == 'Admin' %}selected{% endif %}>Admin</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="editUser({{ user.UserID }})">
+                                                <i class="bi bi-save"></i> Save
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteUser({{ user.UserID }})">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Course Plans Tab -->
+                    <div class="tab-pane fade" id="course-plans">
+                        <h2 class="mb-4">Course Plan Management</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan in course_plans %}
+                                    <tr>
+                                        <td>{{ plan.id }}</td>
+                                        <td>{{ plan.user_name }}</td>
+                                        <td>{{ plan.created_date }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" onclick="viewPlan({{ plan.id }})">View</button>
+                                            <button class="btn btn-sm btn-danger" onclick="deletePlan({{ plan.id }})">Delete</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane fade" id="settings">
+                        <h2 class="mb-4">System Settings</h2>
+                        <div class="card">
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Site Name</label>
+                                        <input type="text" class="form-control" value="Syllabus to Course Plan Converter">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Max File Size (MB)</label>
+                                        <input type="number" class="form-control" value="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Allowed File Types</label>
+                                        <input type="text" class="form-control" value="pdf,docx">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editUser(userId) {
+            fetch(`/admin/user/${userId}/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: document.getElementById(`user-first-name-${userId}`).value,
+                    last_name: document.getElementById(`user-last-name-${userId}`).value,
+                    email: document.getElementById(`user-email-${userId}`).value,
+                    login_type: document.getElementById(`user-login-type-${userId}`).value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('User updated successfully');
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the user');
+            });
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user? This will also delete all their course plans.')) {
+                fetch(`/admin/user/${userId}/delete`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        alert('User deleted successfully');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the user');
+                });
+            }
+        }
+
+        function viewPlan(planId) {
+            window.location.href = `/course_plans/${planId}`;
+        }
+
+        function deletePlan(planId) {
+            if (confirm('Are you sure you want to delete this course plan?')) {
+                fetch(`/admin/plan/${planId}/delete`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        alert('Course plan deleted successfully');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the course plan');
+                });
+            }
+        }
+
+        // Handle settings form submission
+        document.querySelector('#settings form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            fetch('/admin/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Settings updated successfully');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating settings');
+            });
+        });
+    </script>
+</body>
+</html> 

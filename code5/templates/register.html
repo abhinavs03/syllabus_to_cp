@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        function updateCities() {
+            const country = document.getElementById('country').value;
+            const cityDropdown = document.getElementById('city');
+            cityDropdown.innerHTML = '';
+            let cities = [];
+            if (country === 'india') {
+                cities = ['New Delhi', 'Mumbai', 'Chennai', 'Bengaluru', 'Kochi'];
+            } else if (country === 'usa') {
+                cities = ['New York', 'Los Angeles', 'Chicago'];
+            } else if (country === 'uk') {
+                cities = ['London', 'Manchester', 'Birmingham', 'Liverpool'];
+            } else if (country === 'sl') {
+                cities = ['Colombo', 'Galle', 'Jaffna'];
+            }
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                cityDropdown.appendChild(option);
+            });
+        }
+    
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('invalid');
+                passwordMatchMessage.textContent = "Passwords do not match";
+                passwordMatchMessage.style.color = 'red';
+            } else {
+                document.getElementById('confirmPassword').classList.remove('invalid');
+                document.getElementById('confirmPassword').classList.add('valid');
+                passwordMatchMessage.textContent = "Passwords match";
+                passwordMatchMessage.style.color = 'green';
+            }
+        }
+    
+        function validateEmail() {
+            const email = document.getElementById('email');
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email.value)) {
+                email.classList.add('invalid');
+            } else {
+                email.classList.remove('invalid');
+                email.classList.add('valid');
+            }
+        }
+    
+        function validateForm(event) {
+            event.preventDefault();
+    
+            let isValid = true;
+            const formElements = document.querySelectorAll('.form-group input, .form-group select');
+            
+            formElements.forEach(element => {
+                if (!element.checkValidity()) {
+                    element.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    element.classList.remove('invalid');
+                    element.classList.add('valid');
+                }
+            });
+    
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('invalid');
+                passwordMatchMessage.textContent = "Passwords do not match";
+                passwordMatchMessage.style.color = 'red';
+                isValid = false;
+            } else {
+                document.getElementById('confirmPassword').classList.remove('invalid');
+                passwordMatchMessage.textContent = "Passwords match";
+                passwordMatchMessage.style.color = 'green';
+            }
+    
+            const dob = document.getElementById('dob').value;
+            const dobmessage = document.getElementById('dobmessage');
+            if (dob) {
+                const age = calculateAge(dob);
+                if (age < 18) {
+                    alert("You must be at least 18 years old to register.");
+                    isValid = false;
+                }
+            }
+    
+            if (isValid) {
+                document.querySelector('form').submit();
+            }
+        }
+    
+        function calculateAge(dob) {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function validateAge() {
+    const dob = document.getElementById('dob').value;
+    const submitButton = document.getElementById('submitButton');
+    const dobMessage = document.getElementById('dobmessage');
+
+    if (dob) {
+        const age = calculateAge(dob);
+        if (age < 18) {
+            dobMessage.textContent = "You must be at least 18 years old to register.";
+            dobMessage.style.color = 'red';
+            submitButton.disabled = true;
+        } else {
+            dobMessage.textContent = "";
+            submitButton.disabled = false;
+        }
+    } else {
+        dobMessage.textContent = "";
+        submitButton.disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('dob').addEventListener('input', validateAge);
+});
+
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('form').addEventListener('submit', validateForm);
+    
+            const formElements = document.querySelectorAll('.form-group input, .form-group select');
+            formElements.forEach(element => {
+                element.addEventListener('input', () => {
+                    if (element.checkValidity()) {
+                        element.classList.remove('invalid');
+                        element.classList.add('valid');
+                    } else {
+                        element.classList.remove('valid');
+                        element.classList.add('invalid');
+                    }
+                });
+            });
+    
+            document.getElementById('password').addEventListener('input', validatePasswordMatch);
+            document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+            document.getElementById('email').addEventListener('input', validateEmail);
+        });
+
+        function showAlert(message, status) {
+            if (status === "success") {
+                alert("✅ " + message); // Success alert
+            } else if (status === "error") {
+                alert("❌ " + message); // Error alert
+            }
+        }
+    </script>
+    
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+        body {
+            font-family: "Poppins", sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            /*background-color: #36454F;*/
+            background: #13072e;
+
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: transparent;
+            backdrop-filter: blur(20px);
+            border-radius: 10px;
+            box-shadow: 0 0 10px #b3aaff;;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 32px;
+            color: #b3aaff;
+        }
+        .form-group {
+            margin-bottom: 1.5em;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            color: #b3aaff;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: transparent;
+            color: #b3aaff;
+            border: 1px solid #3f2182;
+            border-radius: 10px;
+        }
+        .gender-group label {
+            display: inline-block;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        .gender-group input {
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        button[type="submit"] {
+            background-color: black;
+            color: white;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            display: block;
+            margin: 20px auto 0;
+            border-radius: 20px;
+            font-weight: bold;
+            border: none;
+        }
+        button[type="submit"]:hover{
+            background-color: white;
+            color: black;
+            transition: 0.4s;
+        }
+        input.valid {
+            border: 2px solid green;
+        }
+        input.invalid {
+            border: 2px solid red;
+        }
+        .error-message {
+            position: absolute;
+            color: red;
+            font-size: 0.9em;
+            top: 100%;
+            left: 0;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: #13072e;
+            background-image: url(./abstract-luxury-blur-dark-grey-black-gradient-used-as-background-studio-wall-display-your-products.jpg);
+            background-size: cover;
+            border: 1px solid rgba(255, 255, 255, .2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 10px rgba(0,0,0,.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .content .btnLogin-popup {
+            width: 120px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid #fff;
+            outline: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #fff;
+            font-weight: 500;
+            margin-left: 30px;
+            margin-top: 0px;
+            transition: .4s;
+        }
+
+        .content .btnLogin-popup:hover {
+            background: #fff;
+            color: #162938;
+        }
+        .svg-icon {
+            width: 100px;
+            height: 100px;
+        }
+        footer {
+            background-image: linear-gradient(135deg, #13072e, #3f2182);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+            <a class="navbar-brand" href="./sample2.html" style="color: #b3aaff;font-size: 24px;">Planify</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 890px;">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="sample2.html" style="color: #b3aaff;">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="convert.html" style="color: #b3aaff;">Convert</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #b3aaff;">
+                            About us
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #b3aaff;backdrop-filter: blur(20px);">
+                            <a class="dropdown-item" href="desc.html" style="font-weight: 700;color:#13072e;">Description</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="serv.html" style="font-weight: 700;color:#13072e;">Services</a>
+                        </div>
+                    </li>
+                    <div class="content">
+                        <button class="btnLogin-popup" onclick="window.location.href='/login';">Login</button>
+                    </div>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <form action="/register" method="post">
+        <div class="container" style="margin-top: 140px;margin-bottom: 30px;">
+            <h1 style="margin-top: 30px;">User Registration</h1>
+            <div class="form-group">
+                <label for="FirstName" style="color: #b3aaff;">First Name:</label>
+                <input type="text" id="FirstName" name="FirstName" placeholder="Enter First Name" required>
+            </div>
+            <div class="form-group">
+                <label for="LastName">Last Name:</label>
+                <input type="text" id="LastName" name="LastName" placeholder="Enter Last Name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email/Username:</label>
+                <input type="email" id="email" name="email" placeholder="Enter Email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Create Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter Password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Enter Password" required>
+                <span id="passwordMatchMessage" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <div class="gender-group">
+                    <label for="gender">Gender:</label>
+                    <label for="male">
+                        <input type="radio" id="male" name="gender" value="Male" required>
+                        Male
+                    </label>
+                    <label for="female">
+                        <input type="radio" id="female" name="gender" value="Female" required>
+                        Female
+                    </label>
+                    <label for="other">
+                        <input type="radio" id="other" name="gender" value="Other" required>
+                        Other
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dob">DOB:</label>
+                <input type="date" id="dob" name="dob" placeholder="YYYY-MM-DD" required>
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country" onchange="updateCities()" required>
+                    <option value="">Select...</option>
+                    <option value="india">India</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                    <option value="sl">Sri Lanka</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <select id="city" name="city" required>
+                    <option value="">Select a city...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="phno">Mobile Number:</label>
+                <input type="number" id="phno" name="phno" placeholder="Enter Mobile Number" required>
+            </div>    
+            <button type="submit" id="submitButton">Register</button>
+        </div>
+    </form>
+    {% if message %}
+        <script>
+            showAlert("{{ message }}", "{{ status }}");
+        </script>
+    {% endif %}
+<footer>
+    <p>&copy; 2024 Planify</p>
+</footer>
+</body>
+</html>
