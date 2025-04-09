@@ -1,6 +1,12 @@
-Flask==2.0.1
-mysql-connector-python==8.0.26
+Flask==2.3.3
+mysql-connector-python==8.1.0
+Werkzeug==2.3.7
+pdf2image==1.16.3
+pytesseract==0.3.10
 python-docx==0.8.11
+Pillow==10.0.0
+requests==2.31.0
 docx2pdf==0.1.8
-Werkzeug==2.0.1 
-gunicorn
+reportlab==4.0.4
+gunicorn==21.2.0
+python-dotenv==1.0.0
